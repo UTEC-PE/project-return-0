@@ -8,7 +8,10 @@ class Node {
         typedef typename G::E E;
         typedef typename G::edge edge;
         typedef typename G::EdgeSeq EdgeSeq;
-
+        Node(double x, double y,N dat):data(dat),x(x),y(y){};
+        N get(){
+            return data;
+        }
         EdgeSeq edges;
 
     private:
