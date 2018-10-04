@@ -12,6 +12,7 @@ class Node {
         N get(){
             return data;
         }
+        ~Node(){};
         EdgeSeq edges;
 
     private:
