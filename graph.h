@@ -17,7 +17,7 @@ class Traits {
 
 template <typename Tr>
 class Graph {
-    public:
+public:
         typedef Graph<Tr> self;
         typedef Node<self> node;
         typedef Edge<self> edge;
@@ -28,11 +28,17 @@ class Graph {
         typedef typename NodeSeq::iterator NodeIte;
         typedef typename EdgeSeq::iterator EdgeIte;
 
-        void insertar_nodo(double x, double y,N vertice){
+private:
+    NodeSeq nodes;
+    NodeIte ni;
+    EdgeIte ei;
+
+public:
+     void insertar_nodo(double x, double y,int vertice){
             node* temp=new node(x,y,vertice);
             nodes.push_back(temp);
         };
-        void insertar_arista(N v1,N v2,E peso, bool dir){
+        void insertar_arista(int v1,int v2,E peso, bool dir){
             edge* temp1=new edge(peso,dir);
             edge* temp2=new edge(peso,dir);
             for (ni=nodes.begin();ni!=nodes.end();++ni){
@@ -61,10 +67,7 @@ class Graph {
             }
         }
 
-    private:
-        NodeSeq nodes;
-        NodeIte ni;
-        EdgeIte ei;
+
 };
 
 typedef Graph<Traits> graph;
