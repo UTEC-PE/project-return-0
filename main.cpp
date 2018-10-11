@@ -6,7 +6,8 @@
 using namespace std;
 
 int main(int argc, char *argv[]) {
-    graph g1(true);
+    graph g1;
+    g1.tipo(false);
     g1.insertar_nodo(1,1,'A');
     g1.insertar_nodo(2,2,'B');
     g1.insertar_nodo(3,3,'C');

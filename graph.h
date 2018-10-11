@@ -28,7 +28,10 @@ class Graph {
         typedef typename NodeSeq::iterator NodeIte;
         typedef typename EdgeSeq::iterator EdgeIte;
 
-        Graph(bool _dir):dir(_dir){};
+        Graph(){};
+        void tipo(bool tipo){
+            dir=tipo;
+        };
         void insertar_nodo(double x, double y, N vertice){
             node* temp=new node(x,y,vertice);
             nodes.push_back(temp);
@@ -36,30 +39,28 @@ class Graph {
         void insertar_arista(N v1,N v2,E peso){
 
             edge* temp1=new edge(peso);
-            edge* temp2=new edge(peso);
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 if ((*ni)->get()==v1){
                     temp1->nodes[0]=(*ni);
-                    temp2->nodes[1]=(*ni);
                 }
                 if ((*ni)->get()==v2){
                     temp1->nodes[1]=(*ni);
-                    temp2->nodes[0]=(*ni);
                 }
             }
             if(dir==false){
                 temp1->nodes[0]->edges.push_back(temp1);
-                temp2->nodes[0]->edges.push_back(temp2);
+                temp1->nodes[1]->edges.push_back(temp1);
             }
             else{temp1->nodes[0]->edges.push_back(temp1);}
         }
         EdgeIte eliminar_arista(N v1,N v2){
             EdgeIte ers;
+            edge* temp;
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 if ((*ni)->get()==v1){
                     for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
                         if((*ei)->nodes[1]->get()==v2){
-                            delete (*ei);
+                            temp=(*ei);
                             ei=(*ni)->edges.erase(ei);
                             ers=ei;
                         }
@@ -68,14 +69,14 @@ class Graph {
                 if(dir==false){
                     if ((*ni)->get()==v2){
                         for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
-                            if((*ei)->nodes[1]->get()==v1){
-                                delete (*ei);
+                            if((*ei)->nodes[0]->get()==v1){
                                 ei=(*ni)->edges.erase(ei);
                             }
                         }
                     }
                 }
             }
+            delete temp;
             return ers;
         }
         void eliminar_nodo(N v1){
@@ -92,14 +93,36 @@ class Graph {
                 }
             }
         }
+        node* buscar_vertice(N v1){
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                if ((*ni)->get()==v1){
+                    return (*ni);
+                }
+            }
+        }
+        edge* buscar_arista(N v1,N v2){
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                if ((*ni)->get()==v1){
+                    for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
+                        if((*ei)->nodes[1]->get()==v2){
+                            return (*ei);
+                        }
+                    }
+                }
+            }
+        }
         void print(){
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 cout <<(*ni)->get()<<endl;
                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
                     cout <<"peso : ";
                     cout<<(*ei)->get()<<" nodo :";
-                    cout<<(*ei)->nodes[1]->get();
-                    cout <<" ";
+                    if((*ni)->get()!= (*ei)->nodes[1]->get()){
+                        cout<<(*ei)->nodes[1]->get();
+                    }else{
+                        cout<<(*ei)->nodes[0]->get();
+                    }
+                    cout <<" / ";
                 }
                 cout <<endl;
             }
