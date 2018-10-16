@@ -82,6 +82,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="C:/Users/GMSH/Desktop/AED/project-return-0/BFS.h">
+			<Option target="project-return-0"/>
+		</Unit>
+		<Unit filename="C:/Users/GMSH/Desktop/AED/project-return-0/Kruskal.h">
+			<Option target="project-return-0"/>
+		</Unit>
 		<Unit filename="C:/Users/GMSH/Desktop/AED/project-return-0/edge.h">
 			<Option target="project-return-0"/>
 		</Unit>

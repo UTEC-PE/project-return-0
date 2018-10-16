@@ -9,65 +9,65 @@
 #include "graph.h"
 
 using namespace std;
-/*
- * Clase de ayuda para leer el grafo desde un archivo,
- * no es necesario que la utilicen, podrían implementar su lector
- * desde su grafo o algún otro lado
- **/
-template <typename G>
-class Read {
+class Trts {
+public:
+    typedef char N;
+    typedef int E;
+};
 
-private:
+template <typename Tr>
+class Read {
+    typedef typename Tr::N N;
+    typedef typename Tr::E E;
     string file;
 
 public:
-		Read() {
-		    ;
-            // TODO
+    Read() {
+            cout<<"Escriba el nombre del archivo a leer: ";
+        cin>>file;
+        ifstream theFile(file);
+        if(!theFile.is_open()) {
+            cout << "El archivo no existe...\n";
+        }else{
+            cout<<"Se logro abrir el archivo...\n\n";
         }
+        // TODO
+    }
 
-        void get(){
-		    cout<<"ingrese el nombre del archivo: ";
-            cin >> file;
-            ifstream theFile(file);
+    void getGraph() {
+        ifstream theFile(file);
 
-            if(!theFile.is_open()){
-                cout<<"El archivo no existe...\n";
-            }else{
-                double x;
-                double y;
-                int m, a, b, peso;
-                bool flag;
-                graph g1;
-                    theFile>>m;
-                    int i=0;
+        if(theFile.is_open()){
+        double x, y;
+        N a, b, c;
+        E m, peso;
+        bool flag;
+        int i=0;
 
-                    while(i!=m){
 
-                        theFile >> x >> y;
+        graph gl;
+        theFile >> m;
 
-                        g1.insertar_nodo(x, y, i);
-                        i++;
 
-                    }
-                    while(theFile){
-                        theFile>>a>>b>>peso>>flag;
-                        g1.insertar_arista(a,b,peso,flag);
-                    }
+        while(i != m){
+                cout<<"Ingrese el nombre del Nodo: ";
+                    cin>>c;
+                    
+                    theFile >> x >> y;
+                    gl.insertar_nodo(x, y, c);
+                    i++;
+                    c=NULL;
+            }
+            while(theFile){
+                theFile>>a>>b>>peso>>flag;
+                gl.insertar_arista(a, b, peso, flag);
+            }
 
-                g1.print();
-//                g1.insertar_arista('A','C',3,0);
-//                g1.insertar_arista('A','D',4,0);
-//                cout <<endl;
-//                    cout<<word<<" ";
-//                    opn >> word;
-                }
+        gl.print();
 
-		};
-
-		graph& getGraph() {
-        }
-
+    }
+    }
 };
+typedef Read<Trts> rd;
 
 #endif
