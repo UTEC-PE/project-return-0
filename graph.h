@@ -29,15 +29,24 @@ public:
     typedef typename EdgeSeq::iterator EdgeIte;
 
     Graph(){};
-    void tipo(bool tipe){
-        dir=tipe;
+    void tipo(bool tipo){
+        dir=tipo;
     };
     void insertar_nodo(double x, double y, N vertice){
+        if (buscar_vertice(vertice)!=nullptr){
+            cout<<"Nodo "<<vertice <<" ya existente"<<endl;
+            system("pause");
+            return;
+        }
         node* temp=new node(x,y,vertice);
         nodes.push_back(temp);
     };
     void insertar_arista(N v1,N v2,E peso){
-
+        if (buscar_arista(v1,v2)!=nullptr){
+            cout<<"Arista "<<v1<<"-"<<v2<<" ya existe"<<endl;
+            system("pause");
+            return;
+        }
         edge* temp1=new edge(peso);
         for (ni=nodes.begin();ni!=nodes.end();++ni){
             if ((*ni)->get()==v1){
@@ -47,7 +56,7 @@ public:
                 temp1->nodes[1]=(*ni);
             }
         }
-        if(!dir){
+        if(dir==false){
             temp1->nodes[0]->edges.push_back(temp1);
             temp1->nodes[1]->edges.push_back(temp1);
         }
@@ -55,7 +64,7 @@ public:
     }
     EdgeIte eliminar_arista(N v1,N v2){
         EdgeIte ers;
-        edge *temp = nullptr;
+        edge* temp;
         for (ni=nodes.begin();ni!=nodes.end();++ni){
             if ((*ni)->get()==v1){
                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
@@ -66,7 +75,7 @@ public:
                     }
                 }
             }
-            if(!dir){
+            if(dir==false){
                 if ((*ni)->get()==v2){
                     for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
                         if((*ei)->nodes[0]->get()==v1){
@@ -86,6 +95,7 @@ public:
             if ((*nii)->get()==v1){
                 for(eii=(*nii)->edges.begin();eii!=(*nii)->edges.end();++eii){
                     eii=eliminar_arista((*eii)->nodes[0]->get(),(*eii)->nodes[1]->get());
+
                 }
                 delete (*nii);
                 nii=nodes.erase(nii);
