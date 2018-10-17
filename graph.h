@@ -28,24 +28,39 @@ public:
     typedef typename NodeSeq::iterator NodeIte;
     typedef typename EdgeSeq::iterator EdgeIte;
 
-    Graph(){};
-    void tipo(bool tipo){
-        dir=tipo;
-    };
-    void insertar_nodo(double x, double y, N vertice){
-        node* temp=new node(x,y,vertice);
-        nodes.push_back(temp);
-    };
-    void insertar_arista(N v1, N v2, E peso, bool b) {
 
-        edge* temp1=new edge(peso);
-        for (ni=nodes.begin();ni!=nodes.end();++ni){
-            if ((*ni)->get()==v1){
-                temp1->nodes[0]=(*ni);
+        Graph(){};
+
+        void tipo(bool tipo){
+            dir=tipo;
+        };
+
+        void insertar_nodo(double x, double y, N vertice){
+            if (buscar_vertice(vertice)!=nullptr){
+                cout<<"Nodo "<<vertice <<" ya existente"<<endl;
+                system("pause");
+                return;
             }
-            if ((*ni)->get()==v2){
-                temp1->nodes[1]=(*ni);
+            node* temp=new node(x,y,vertice);
+            nodes.push_back(temp);
+        };
+        void insertar_arista(N v1,N v2,E peso){
+            if (buscar_arista(v1,v2)!=nullptr){
+                cout<<"Arista "<<v1<<"-"<<v2<<" ya existe"<<endl;
+                system("pause");
+                return;
             }
+            edge* temp1=new edge(peso);
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                if ((*ni)->get()==v1){
+                    temp1->nodes[0]=(*ni);
+                }
+                if ((*ni)->get()==v2){
+                    temp1->nodes[1]=(*ni);
+                }
+
+            }
+
         }
         if(!dir){
             temp1->nodes[0]->edges.push_back(temp1);
@@ -98,6 +113,7 @@ public:
             if ((*ni)->get()==v1){
                 return (*ni);
             }
+            return nullptr;
         }
 
     }
@@ -110,6 +126,7 @@ public:
                     }
                 }
             }
+            return nullptr;
         }
     }
     void print(){
