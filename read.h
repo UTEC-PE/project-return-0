@@ -44,28 +44,27 @@ public:
         bool flag;
         int i=0;
 
-
         graph gl;
+        theFile >> flag;
+        gl.tipo(flag);
         theFile >> m;
 
-
-        while(i != m){
-                cout<<"Ingrese el nombre del Nodo: ";
-                    cin>>c;
-                    
-                    theFile >> x >> y;
+            while(i != m){
+                    theFile >> x >> y >> c;
                     gl.insertar_nodo(x, y, c);
                     i++;
-                    c=NULL;
             }
             while(theFile){
-                theFile>>a>>b>>peso>>flag;
-                gl.insertar_arista(a, b, peso, flag);
+                theFile>>a>>b>>peso;
+                gl.insertar_arista(a, b, peso);
             }
 
         gl.print();
 
     }
+    }
+    ~Read(){
+
     }
 };
 typedef Read<Trts> rd;
