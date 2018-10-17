@@ -1,1 +1,4 @@
 main.exe
+cmake-build-debug
+CMakeLists.txt
+graph.out
