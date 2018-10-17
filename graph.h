@@ -29,14 +29,14 @@ public:
     typedef typename EdgeSeq::iterator EdgeIte;
 
     Graph(){};
-    void tipo(bool tipo){
-        dir=tipo;
+    void tipo(bool tipe){
+        dir=tipe;
     };
     void insertar_nodo(double x, double y, N vertice){
         node* temp=new node(x,y,vertice);
         nodes.push_back(temp);
     };
-    void insertar_arista(N v1, N v2, E peso, bool b) {
+    void insertar_arista(N v1,N v2,E peso){
 
         edge* temp1=new edge(peso);
         for (ni=nodes.begin();ni!=nodes.end();++ni){
@@ -55,7 +55,7 @@ public:
     }
     EdgeIte eliminar_arista(N v1,N v2){
         EdgeIte ers;
-        edge* temp;
+        edge *temp = nullptr;
         for (ni=nodes.begin();ni!=nodes.end();++ni){
             if ((*ni)->get()==v1){
                 for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
@@ -86,7 +86,6 @@ public:
             if ((*nii)->get()==v1){
                 for(eii=(*nii)->edges.begin();eii!=(*nii)->edges.end();++eii){
                     eii=eliminar_arista((*eii)->nodes[0]->get(),(*eii)->nodes[1]->get());
-
                 }
                 delete (*nii);
                 nii=nodes.erase(nii);
@@ -99,7 +98,7 @@ public:
                 return (*ni);
             }
         }
-
+        return nullptr;
     }
     edge* buscar_arista(N v1,N v2){
         for (ni=nodes.begin();ni!=nodes.end();++ni){
@@ -111,6 +110,7 @@ public:
                 }
             }
         }
+        return nullptr;
     }
     void print(){
         for (ni=nodes.begin();ni!=nodes.end();++ni){
