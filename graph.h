@@ -33,11 +33,20 @@ class Graph {
             dir=tipo;
         };
         void insertar_nodo(double x, double y, N vertice){
+            if (buscar_vertice(vertice)!=nullptr){
+                cout<<"Nodo "<<vertice <<" ya existente"<<endl;
+                system("pause");
+                return;
+            }
             node* temp=new node(x,y,vertice);
             nodes.push_back(temp);
         };
         void insertar_arista(N v1,N v2,E peso){
-
+            if (buscar_arista(v1,v2)!=nullptr){
+                cout<<"Arista "<<v1<<"-"<<v2<<" ya existe"<<endl;
+                system("pause");
+                return;
+            }
             edge* temp1=new edge(peso);
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 if ((*ni)->get()==v1){
@@ -99,6 +108,7 @@ class Graph {
                     return (*ni);
                 }
             }
+            return nullptr;
         }
         edge* buscar_arista(N v1,N v2){
             for (ni=nodes.begin();ni!=nodes.end();++ni){
@@ -110,6 +120,7 @@ class Graph {
                     }
                 }
             }
+            return nullptr;
         }
         void print(){
             for (ni=nodes.begin();ni!=nodes.end();++ni){
