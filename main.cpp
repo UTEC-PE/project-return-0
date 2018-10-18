@@ -1,13 +1,13 @@
 //#include <GL/glut.h>
 #include <iostream>
-
+#include "read.h"
 #include "graph.h"
 
 using namespace std;
 
 int main(int argc, char *argv[]) {
     graph g1;
-    g1.tipo(false);
+    /*g1.tipo(false);
     g1.insertar_nodo(1,1,'A');
     g1.insertar_nodo(2,2,'B');
     g1.insertar_nodo(3,3,'C');
@@ -22,6 +22,10 @@ int main(int argc, char *argv[]) {
     cout <<endl;
     g1.eliminar_nodo('A');
     cout <<endl;
+    g1.print();
+    */
+    rd gg;
+    gg.getGraph(&g1);
     g1.print();
     system("PAUSE");
     return EXIT_SUCCESS;
