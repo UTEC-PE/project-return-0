@@ -3,7 +3,8 @@
 #include<iostream>
 #include <vector>
 #include <list>
-
+#include <stack>
+#include <map>
 #include "node.h"
 #include "edge.h"
 
@@ -32,6 +33,19 @@ class Graph {
         void tipo(bool tipo){
             dir=tipo;
         };
+        int total_nodos(){
+            return nodes.size();
+        }
+        int total_aristas(){
+            if(nodes.empty()){
+                return 0;
+            }
+            int c=0;
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                c=c+(*ni)->edges.size();
+            }
+            return c;
+        }
         void insertar_nodo(double x, double y, N vertice){
             if (buscar_vertice(vertice)!=nullptr){
                 cout<<"Nodo "<<vertice <<" ya existente"<<endl;
@@ -138,6 +152,111 @@ class Graph {
                 cout <<endl;
             }
         }
+
+        list<char> dfs(){
+            stack<node*> q;
+            list<char> tt;
+            if(total_aristas()==0){
+                return tt;
+            }
+            node* temp;
+            node* temp1;
+            q.push(nodes[0]);
+            nodes[0]->tool=1;
+            while(!q.empty()){
+                temp=q.top();
+                for(ei=temp->edges.begin();ei!=temp->edges.end();++ei){
+                    if(temp!= (*ei)->nodes[1]){
+                        temp1=(*ei)->nodes[1];
+                    }else{
+                        temp1=(*ei)->nodes[0];
+                    }
+                    if(temp1->tool==0){
+                        q.push(temp1);
+                        temp1->tool=1;
+                        goto endwhile;
+                    }
+
+                }
+
+                tt.push_front(q.top()->get());
+                q.pop();
+            endwhile:;
+            }
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                (*ni)->tool=0;
+            }
+            return tt;
+        }
+        void conexo(){
+            list<char> cierre=dfs();
+            if(cierre.size()==nodes.size()){
+                if(dir==0){
+                    cout<<"El grafo es conexo"<<endl;
+                }else{
+                    Graph<Traits> g2;
+                    g2.tipo(true);
+                    for (ni=nodes.begin();ni!=nodes.end();++ni){
+                        g2.insertar_nodo(1,1,(*ni)->get());
+                    }
+                    for (ni=nodes.begin();ni!=nodes.end();++ni){
+                        for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
+                            g2.insertar_arista((*ei)->nodes[1]->get(),(*ei)->nodes[0]->get(),1);
+                        }
+                    }
+                    if(g2.dfs().size()==nodes.size()){
+                        cout <<"El grafo es fuertemente conexo"<<endl;
+                    }else{
+                        cout <<"El grafo NO es fuertemente conexo"<<endl;
+                    }
+                }
+
+            }else{
+                cout <<"El grafo no es conexo"<<endl;
+            }
+
+        }
+
+        void prim(){
+            if(dir==1){
+                cout<<"No se puede aplicar prim, el grafo es dirigido"<<endl;
+            }else if(dfs().size()!=nodes.size()){
+                cout<<"No se puede apliar prim, el grafo no es conexo"<<endl;
+            }else{
+                map<node*,bool> nodos;
+                multimap<E,edge*> pesos;
+                typename multimap<E,edge*>::iterator it;
+                Graph<Traits> g2;
+                g2.tipo(false);
+                nodos.insert(pair<node*,bool>(nodes[0],0));
+                g2.insertar_nodo(1,1,nodes[0]->get());
+                for(ei=nodes[0]->edges.begin();ei!=nodes[0]->edges.end();++ei){
+                    pesos.insert(pair<E,edge*>((*ei)->get(),(*ei)));
+                }
+                while(nodos.size()!=nodes.size()){
+                    it=pesos.begin();
+                    if(nodos.count(it->second->nodes[1])==0 || nodos.count(it->second->nodes[0])==0){
+                        node* temp;
+                        if(nodos.count(it->second->nodes[1])==0){
+                            temp=it->second->nodes[1];
+                        }else{
+                            temp=it->second->nodes[0];
+                        }
+                        nodos.insert(pair<node*,bool>(temp,0));
+                        g2.insertar_nodo(1,1,temp->get());
+                        g2.insertar_arista(it->second->nodes[0]->get(),it->second->nodes[1]->get(),it->first);
+                            pesos.erase(it);
+                        for(ei=temp->edges.begin();ei!=temp->edges.end();++ei){
+                            pesos.insert(pair<E,edge*>((*ei)->get(),(*ei)));
+                        }
+                    }else{
+                        pesos.erase(it);
+                    }
+                }
+                g2.print();
+            }
+        }
+
 
     private:
         bool dir;

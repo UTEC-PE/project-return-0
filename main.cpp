@@ -27,6 +27,9 @@ int main(int argc, char *argv[]) {
     rd gg;
     gg.getGraph(&g1);
     g1.print();
+    cout <<endl;
+    g1.conexo();
+    g1.prim();
     system("PAUSE");
     return EXIT_SUCCESS;
 }

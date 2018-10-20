@@ -14,6 +14,7 @@ class Node {
         }
         ~Node(){};
         EdgeSeq edges;
+        bool tool=0;
 
     private:
         N data;

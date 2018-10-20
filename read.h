@@ -54,9 +54,11 @@ public:
                     g1->insertar_nodo(x, y, c);
                     i++;
             }
+            theFile>>a>>b>>peso;
             while(theFile){
-                theFile>>a>>b>>peso;
+
                 g1->insertar_arista(a, b, peso);
+                theFile>>a>>b>>peso;
             }
 
 
