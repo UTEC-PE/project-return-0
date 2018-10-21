@@ -33,10 +33,10 @@ class Graph {
         void tipo(bool tipo){
             dir=tipo;
         };
-        int total_nodos(){
+        double total_nodos(){
             return nodes.size();
         }
-        int total_aristas(){
+        double total_aristas(){
             if(nodes.empty()){
                 return 0;
             }
@@ -44,7 +44,46 @@ class Graph {
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 c=c+(*ni)->edges.size();
             }
-            return c;
+            if (dir==0){
+                return c/2;
+            }else{
+                return c;
+            }
+
+        }
+        void info_nodo(){
+            N vertice;
+            cout<<"Inserte el vertice del que quiere informacion: ";
+            cin>>vertice;
+            node* temp=buscar_vertice(vertice);
+            int c=0;
+            if(temp==nullptr){
+                cout <<"El vertice no existe"<<endl;
+                return;
+            }
+            if(dir==1){
+                cout <<"El grado de salida es: "<<temp->edges.size()<<endl;
+                for (ni=nodes.begin();ni!=nodes.end();++ni){
+                    for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
+                        if((*ei)->nodes[1]->get()==vertice){
+                            c++;
+                        }
+                    }
+                }
+                cout <<"El grado de entrada es: "<<c<<endl;
+                if(temp->edges.size()==0 && c==0){
+                    cout<<"El vertice esta aislado"<<endl;
+                }else if(temp->edges.size()==0){
+                    cout<<"El vertice es hundido"<<endl;
+                }else if(c==0){
+                    cout<<"El vertice es fuente"<<endl;
+                }
+            }else{
+                cout <<"El grado del vertice es: "<<temp->edges.size()<<endl;
+                if(temp->edges.size()==0){
+                    cout<<"El vertice esta aislado"<<endl;
+                }
+            }
         }
         void insertar_nodo(double x, double y, N vertice){
             if (buscar_vertice(vertice)!=nullptr){
@@ -152,6 +191,14 @@ class Graph {
                 cout <<endl;
             }
         }
+        double densidad(){
+            if(dir==0){
+                return (total_aristas()*2)/(total_nodos()*(total_nodos()-1));
+            }else{
+                return total_aristas()/(total_nodos()*(total_nodos()-1));
+            }
+
+        }
 
         list<char> dfs(){
             stack<node*> q;
@@ -255,6 +302,49 @@ class Graph {
                 }
                 g2.print();
             }
+        }
+
+        void bipartito(){
+            if(dfs().size()!=nodes.size()){
+                cout <<"El grafo no es conexo"<<endl;
+                return;
+            }
+            map<node*,bool> nodos;
+            stack<node*> q;
+            node* temp;
+            node* temp1;
+            q.push(nodes[0]);
+            nodos.insert(pair<node*,bool>(nodes[0],0));
+            nodes[0]->tool=1;
+            while(!q.empty()){
+                temp=q.top();
+                for(ei=temp->edges.begin();ei!=temp->edges.end();++ei){
+                    if(temp!= (*ei)->nodes[1]){
+                        temp1=(*ei)->nodes[1];
+                    }else{
+                        temp1=(*ei)->nodes[0];
+                    }
+                    if(temp1->tool==0){
+                        q.push(temp1);
+                        nodos.insert(pair<node*,bool>(temp1,!nodos[temp]));
+                        temp1->tool=1;
+                        goto endwhile;
+                    }else{
+                        if(nodos[temp]==nodos[temp1]){
+                            cout<<"El grado no es bipartito"<<endl;
+                            return;
+                        }
+                    }
+
+                }
+                q.pop();
+            endwhile:;
+            }
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                (*ni)->tool=0;
+            }
+            cout<<"El grafo es bipartito"<<endl;
+
         }
 
 
