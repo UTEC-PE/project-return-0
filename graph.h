@@ -331,7 +331,7 @@ class Graph {
                         goto endwhile;
                     }else{
                         if(nodos[temp]==nodos[temp1]){
-                            cout<<"El grado no es bipartito"<<endl;
+                            cout<<"El grafo no es bipartito"<<endl;
                             return;
                         }
                     }
@@ -344,6 +344,9 @@ class Graph {
                 (*ni)->tool=0;
             }
             cout<<"El grafo es bipartito"<<endl;
+
+        }
+        ~Graph(){
 
         }
 

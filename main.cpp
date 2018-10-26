@@ -31,7 +31,7 @@ int main(int argc, char *argv[]) {
     g1.conexo();
     g1.prim();
     g1.bipartito();
-    cout<<g1.densidad()<<endl;
+    cout<<"La densidad es: "<<g1.densidad()<<endl;
     g1.info_nodo();
     system("PAUSE");
     return EXIT_SUCCESS;
