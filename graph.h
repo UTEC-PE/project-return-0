@@ -18,41 +18,6 @@ class Traits {
 		typedef int E;
 };
 
-struct DisjointSet{
-    int *parent,*rnk;
-    int n;
-
-    DisjointSet(int n){
-        this->n = n;
-        parent = new int[n+1];
-        rnk = new int[n+1];
-
-        for(int i=0;i<=n;i++){
-            rnk[i] = 0;
-            parent[i] = i;
-        }
-    }
-    int Find(int u){
-        if(u == parent[u]) return parent[u];
-        else return Find(parent[u]);
-    }
-
-    void Union(int x,int y){
-        x = Find(x);
-        y = Find(y);
-        if(x != y){
-            if(rnk[x] < rnk[y]){
-                rnk[y] += rnk[x];
-                parent[x] = y;
-            }
-            else{
-                rnk[x] += rnk[y];
-                parent[y] = x;
-            }
-        }
-    }
-};
-
 
 template <typename Tr>
 class Graph {

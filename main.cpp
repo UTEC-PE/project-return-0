@@ -49,15 +49,15 @@ int main(int argc, char *argv[]) {
 //    g2.print();
 //    cout <<endl;
 //    g2.dfs();
-    g1.BFS();
-    if (g1.BFS()==true){
-        cout << "es conchatumarte";
-    }
+//    g1.BFS();
+//    if (g1.BFS()==true){
+//        cout << "es conchatumarte";
+//    }
 //    g1.conexo();
 //    g1.prim();
-//    cout<<"kruskal";
-//    cout <<endl;   cout <<endl;
-//    g1.kruskal();
+    cout<<"kruskal";
+    cout <<endl;   cout <<endl;
+    g1.kruskal();
 //    g1.bipartito();
 //    cout<<g1.densidad()<<endl;
 //    g1.info_nodo();
