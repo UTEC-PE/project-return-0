@@ -304,6 +304,91 @@ class Graph {
             }
         }
 
+        void kruskal(){
+        if(dir==1){
+            cout<<"No se puede aplicar kruskal, el grafo es dirigido"<<endl;
+        }else if(dfs().size()!=nodes.size()){
+            cout<<"No se puede aplicar kruskal, el grafo no es conexo"<<endl;
+        }
+            map<node*,bool> nodos;
+            multimap<E,edge*, less<int>> pesos;
+            typename multimap<E,edge*>::iterator it;
+            Graph<Traits> g2;
+            g2.tipo(false);
+            nodos.insert(pair<node*,bool>(nodes[0],0));
+            g2.insertar_nodo(1,1,nodes[0]->get());
+            for(ei=nodes[0]->edges.begin();ei!=nodes[0]->edges.end();++ei){
+                pesos.insert(pair<E,edge*>((*ei)->get(),(*ei)));
+            };
+            while(nodos.size()!=nodes.size()){
+                it=pesos.begin();
+                if(nodos.count(it->second->nodes[0])==0 || nodos.count(it->second->nodes[1])==0){
+                    node* temp;
+                    if(nodos.count(it->second->nodes[1])==0){
+                        temp=it->second->nodes[1];
+                    }else{
+                        temp=it->second->nodes[0];
+                    }
+                    nodos.insert(pair<node*,bool>(temp,0));
+                    g2.insertar_nodo(1,1,temp->get());
+                    g2.insertar_arista(it->second->nodes[0]->get(),it->second->nodes[1]->get(),it->first);
+                    pesos.erase(it);
+                    for(ei=temp->edges.begin();ei!=temp->edges.end();++ei){
+                        pesos.insert(pair<E,edge*>((*ei)->get(),(*ei)));
+                    }
+                }else{
+                    pesos.erase(it);
+                }
+            }
+
+            g2.print();
+
+        }
+
+        bool BFS(){
+
+            stack<node*> q;
+            int a=0;
+//            if(total_aristas()==0){
+//                return tt;
+//            }
+            node* temp;
+            node* temp1;
+            q.push(nodes[0]);
+            nodes[0]->tool=1;
+            a++;
+            while(!q.empty()){
+                bool aed=0;
+                temp=q.top();
+                for(ei=temp->edges.begin();ei!=temp->edges.end();++ei){
+                    if(temp!= (*ei)->nodes[1]){
+                      temp1=(*ei)->nodes[1];
+                    }else{
+                        temp1=(*ei)->nodes[0];
+                    }
+                    if(temp1->tool==0){
+                        q.push(temp1);
+                        temp1->tool=1;
+                        aed=1;
+                        a++;
+                    }
+                }
+
+                if(aed==0)
+                q.pop();
+            }
+
+            for (ni=nodes.begin();ni!=nodes.end();++ni){
+                (*ni)->tool=0;
+            }
+
+            if(a==nodes.size()){
+            return true;
+            }else {
+                return false;
+            }
+        }
+
         void bipartito(){
             if(dfs().size()!=nodes.size()){
                 cout <<"El grafo no es conexo"<<endl;

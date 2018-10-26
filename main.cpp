@@ -16,6 +16,8 @@ int main(int argc, char *argv[]) {
     cout <<endl;
     g1.conexo();
     g1.prim();
+    g1.kruskal();
+    cout<<g1.BFS()<<endl;
     g1.bipartito();
     cout<<"La densidad es: "<<g1.densidad()<<endl;
     g1.info_nodo();
