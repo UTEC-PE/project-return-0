@@ -14,11 +14,15 @@ class Node {
         }
         ~Node(){};
         EdgeSeq edges;
+        bool tool=0;
 
     private:
+//        E rank;
+//        Node* parent;
         N data;
         double x;
         double y;
+//    Node(int data) : data(data), rank(0), parent(this) {};
 };
 
 #endif
