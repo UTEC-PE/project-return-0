@@ -307,8 +307,10 @@ class Graph {
         void kruskal(){
         if(dir==1){
             cout<<"No se puede aplicar kruskal, el grafo es dirigido"<<endl;
+            return;
         }else if(dfs().size()!=nodes.size()){
             cout<<"No se puede aplicar kruskal, el grafo no es conexo"<<endl;
+            return;
         }
             map<node*,bool> nodos;
             multimap<E,edge*, less<int>> pesos;
@@ -432,8 +434,11 @@ class Graph {
 
         }
         ~Graph(){
+            /*for (ni=nodes.begin();ni!=nodes.end();++ni){
+                eliminar_nodo((*ni)->get());
+            }*/
 
-        }
+        };
 
 
     private:
