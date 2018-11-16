@@ -56,7 +56,6 @@ public:
             }
             theFile>>a>>b>>peso;
             while(theFile){
-
                 g1->insertar_arista(a, b, peso);
                 theFile>>a>>b>>peso;
             }
