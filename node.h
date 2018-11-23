@@ -12,6 +12,12 @@ class Node {
         N get(){
             return data;
         }
+        double get_x(){
+            return x;
+        }
+        double get_y(){
+            return y;
+        }
         ~Node(){};
         EdgeSeq edges;
         bool tool=0;

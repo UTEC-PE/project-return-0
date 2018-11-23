@@ -5,8 +5,13 @@
 #include <list>
 #include <stack>
 #include <map>
+#include <set>
+#include <unordered_map>
+#include <math.h>
 #include "node.h"
 #include "edge.h"
+
+#define INF 9999
 
 using namespace std;
 
@@ -33,9 +38,11 @@ class Graph {
         void tipo(bool tipo){
             dir=tipo;
         };
+        //-----------------------------------------------------------------------TOTAL NODOS
         double total_nodos(){
             return nodes.size();
         }
+        //-----------------------------------------------------------------------TOTAL ARISTAS
         double total_aristas(){
             if(nodes.empty()){
                 return 0;
@@ -51,6 +58,7 @@ class Graph {
             }
 
         }
+        //-----------------------------------------------------------------------INFO NODO
         void info_nodo(){
             N vertice;
             cout<<"Inserte el vertice del que quiere informacion: ";
@@ -85,6 +93,7 @@ class Graph {
                 }
             }
         }
+        //-----------------------------------------------------------------------INSERTAR NODO
         void insertar_nodo(double x, double y, N vertice){
             if (buscar_vertice(vertice)!=nullptr){
                 cout<<"Nodo "<<vertice <<" ya existente"<<endl;
@@ -94,6 +103,7 @@ class Graph {
             node* temp=new node(x,y,vertice);
             nodes.push_back(temp);
         };
+        //-----------------------------------------------------------------------INSERTAR ARISTA
         void insertar_arista(N v1,N v2,E peso){
             if (buscar_arista(v1,v2)!=nullptr){
                 cout<<"Arista "<<v1<<"-"<<v2<<" ya existe"<<endl;
@@ -115,6 +125,7 @@ class Graph {
             }
             else{temp1->nodes[0]->edges.push_back(temp1);}
         }
+        //-----------------------------------------------------------------------ELIMINAR ARISTA
         EdgeIte eliminar_arista(N v1,N v2){
             EdgeIte ers;
             edge* temp;
@@ -141,6 +152,7 @@ class Graph {
             delete temp;
             return ers;
         }
+        //-----------------------------------------------------------------------ELIMAR NODO
         void eliminar_nodo(N v1){
             NodeIte nii;
             EdgeIte eii;
@@ -155,6 +167,7 @@ class Graph {
                 }
             }
         }
+        //-----------------------------------------------------------------------BUSCAR VERTICE
         node* buscar_vertice(N v1){
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 if ((*ni)->get()==v1){
@@ -163,11 +176,12 @@ class Graph {
             }
             return nullptr;
         }
+        //-----------------------------------------------------------------------BUSCAR ARISTA
         edge* buscar_arista(N v1,N v2){
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 if ((*ni)->get()==v1){
                     for(ei=(*ni)->edges.begin();ei!=(*ni)->edges.end();++ei){
-                        if((*ei)->nodes[1]->get()==v2){
+                        if((*ei)->goes_to(v1)->get()==v2){
                             return (*ei);
                         }
                     }
@@ -175,6 +189,7 @@ class Graph {
             }
             return nullptr;
         }
+        //-----------------------------------------------------------------------PRINT
         void print(){
             for (ni=nodes.begin();ni!=nodes.end();++ni){
                 cout <<(*ni)->get()<<endl;
@@ -191,6 +206,7 @@ class Graph {
                 cout <<endl;
             }
         }
+        //-----------------------------------------------------------------------DENSIDAD
         double densidad(){
             if(dir==0){
                 return (total_aristas()*2)/(total_nodos()*(total_nodos()-1));
@@ -199,7 +215,7 @@ class Graph {
             }
 
         }
-
+        //-----------------------------------------------------------------------DFS
         list<char> dfs(){
             stack<node*> q;
             list<char> tt;
@@ -235,6 +251,7 @@ class Graph {
             }
             return tt;
         }
+        //-----------------------------------------------------------------------CONEXO
         void conexo(){
             list<char> cierre=dfs();
             if(cierre.size()==nodes.size()){
@@ -263,7 +280,7 @@ class Graph {
             }
 
         }
-
+        //-----------------------------------------------------------------------PRIM
         void prim(){
             if(dir==1){
                 cout<<"No se puede aplicar prim, el grafo es dirigido"<<endl;
@@ -303,7 +320,7 @@ class Graph {
                 g2.print();
             }
         }
-
+        //-----------------------------------------------------------------------KRUSKAL
         void kruskal(){
         if(dir==1){
             cout<<"No se puede aplicar kruskal, el grafo es dirigido"<<endl;
@@ -346,7 +363,7 @@ class Graph {
             g2.print();
 
         }
-
+        //-----------------------------------------------------------------------BFS
         bool BFS(){
 
             stack<node*> q;
@@ -390,7 +407,7 @@ class Graph {
                 return false;
             }
         }
-
+        //-----------------------------------------------------------------------BIPARTITO
         void bipartito(){
             if(dfs().size()!=nodes.size()){
                 cout <<"El grafo no es conexo"<<endl;
@@ -433,6 +450,149 @@ class Graph {
             cout<<"El grafo es bipartito"<<endl;
 
         }
+        //-----------------------------------------------------------------------A*
+        double distance(N v1,N v2){
+            node* temp1=buscar_vertice(v1);
+            node* temp2=buscar_vertice(v2);
+            return sqrt(pow(temp1->get_x() - temp2->get_x(),2)+pow(temp1->get_y() - temp2->get_y(),2));
+        }
+        list<node*> A_Star(N v1,N v2){
+            set<N> exitt;
+            node* temp=buscar_vertice(v1);
+            multimap<double,node*> nodos;
+            typename multimap<double,node*>::iterator it;
+            nodos.insert(pair<double,node*>(distance(v1,v2),temp));
+            unordered_map<N,pair<double[2],N > > tabla;
+            tabla[v1].first[0]=0;
+            tabla[v1].first[1]=distance(v1,v2);
+            tabla[v1].second=v1;
+            while(!nodos.empty()){
+                it=nodos.begin();
+                temp=it->second;
+                nodos.erase(it);
+                if(temp->get()==v2){
+                    break;
+                }
+                for(ei=temp->edges.begin();ei!=temp->edges.end();++ei){
+                    char aa=(*ei)->goes_to(temp->get())->get();
+                    if (exitt.count(aa)==1){
+                        continue;
+                    }
+                    double bb=tabla[temp->get()].first[0]+(*ei)->get();
+                    if(tabla.count(aa)==1){
+                        if(bb < tabla[aa].first[0]){
+                            tabla[aa].first[0]=bb;
+                            tabla[aa].first[1]=bb + distance(aa,v2);
+                            tabla[aa].second=temp->get();
+                            for(it=nodos.begin();it!=nodos.end();++it){
+                                if(it->second->get()==aa){
+                                    nodos.erase(it);
+                                    nodos.insert(pair<double,node*>(bb + distance(aa,v2),(*ei)->goes_to(temp->get())));
+                                    break;
+                                }
+                            }
+                        }
+                    }else{
+                        tabla[aa].first[0]=bb;
+                        tabla[aa].first[1]=bb + distance(aa,v2);
+                        tabla[aa].second=temp->get();
+                        nodos.insert(pair<double,node*>(bb + distance(aa,v2),(*ei)->goes_to(temp->get()) ));
+                    }
+                }
+                exitt.insert(temp->get());
+            }
+            list<node*> lit;
+            typename list<node*>::iterator itt;
+            typename unordered_map<N,pair<double[2],N > >::iterator ite;
+            ite=tabla.find(v2);
+            if(ite!=tabla.end()){
+                while(ite->first!=v1){
+                    lit.push_front(buscar_vertice(ite->first));
+                    ite=tabla.find(ite->second.second);
+                }
+                lit.push_front(buscar_vertice(v1));
+            }else{
+                cout<<"No se pudo llegar al nodo deseado"<<endl;
+            }
+            for(itt=lit.begin();itt!=lit.end();++itt){
+                cout<<(*itt)->get()<<" ";
+            }
+            cout<<endl;
+            return lit;
+
+        }
+
+        //-----------------------------------------------------------------------FLOYD WARSHALL
+        void floyd_warshall(){
+            const unsigned int n=total_nodos();
+            E distancias[n][n];
+            E caminos[n][n];
+            unordered_map<E,N> refe;
+            for(int i=0;i<nodes.size();i++){
+                refe.insert(pair<E,N>(i,nodes[i]->get()));
+            }
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
+                    if(i==j){
+                        distancias[i][j]=0;
+                        continue;
+                    }
+                    edge* temp=buscar_arista(refe[i],refe[j]);
+                    if(temp==nullptr){
+                        distancias[i][j]=INF;
+                    }else{
+                        distancias[i][j]=temp->get();
+                    }
+                }
+            }
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
+                    if(i==j){
+                        caminos[i][j]=INF;
+                        continue;
+                    }
+                    caminos[i][j]=j;
+                }
+            }
+            for(int k=0;k<n;k++){
+                for(int i=0;i<n;i++){
+                    if(i==k){
+                        continue;
+                    }
+                    for(int j=0;j<n;j++){
+                        if(j==k){
+                            continue;
+                        }
+                        if(i==j){
+                            continue;
+                        }
+                        if(distancias[i][j] > distancias[k][j] + distancias[i][k]){
+                           distancias[i][j]= distancias[k][j] + distancias[i][k];
+                           caminos[i][j] = k;
+                        }
+                    }
+                }
+            }
+            //IMPRIMIR----------------------------
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
+                    cout<<distancias[i][j]<<" ";
+                }
+                cout<<endl;
+            }
+            cout<<endl;
+
+            for(int i=0;i<n;i++){
+                for(int j=0;j<n;j++){
+                    cout<<caminos[i][j]<<" ";
+                }
+                cout<<endl;
+            }
+            cout<<endl;
+
+
+
+        }
         ~Graph(){
             /*for (ni=nodes.begin();ni!=nodes.end();++ni){
                 eliminar_nodo((*ni)->get());
@@ -451,3 +611,5 @@ class Graph {
 typedef Graph<Traits> graph;
 
 #endif
+
+
