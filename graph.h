@@ -15,6 +15,21 @@
 
 using namespace std;
 
+struct matrices{
+    int** distancias;
+    int** caminos;
+    matrices(const unsigned int n){
+        distancias = new int* [n];
+        for (int i = 0; i < n; i++) {
+            distancias[i] = new int[n];
+        }
+        caminos = new int* [n];
+        for (int i = 0; i < n; i++) {
+            caminos[i] = new int[n];
+        }
+    }
+};
+
 class Traits {
 	public:
 		typedef char N;
@@ -523,10 +538,9 @@ class Graph {
         }
 
         //-----------------------------------------------------------------------FLOYD WARSHALL
-        void floyd_warshall(){
+        matrices* floyd_warshall(){
             const unsigned int n=total_nodos();
-            E distancias[n][n];
-            E caminos[n][n];
+            matrices* matriss=new matrices(n);
             unordered_map<E,N> refe;
             for(int i=0;i<nodes.size();i++){
                 refe.insert(pair<E,N>(i,nodes[i]->get()));
@@ -534,24 +548,24 @@ class Graph {
             for(int i=0;i<n;i++){
                 for(int j=0;j<n;j++){
                     if(i==j){
-                        distancias[i][j]=0;
+                        matriss->distancias[i][j]=0;
                         continue;
                     }
                     edge* temp=buscar_arista(refe[i],refe[j]);
                     if(temp==nullptr){
-                        distancias[i][j]=INF;
+                        matriss->distancias[i][j]=INF;
                     }else{
-                        distancias[i][j]=temp->get();
+                        matriss->distancias[i][j]=temp->get();
                     }
                 }
             }
             for(int i=0;i<n;i++){
                 for(int j=0;j<n;j++){
                     if(i==j){
-                        caminos[i][j]=INF;
+                        matriss->caminos[i][j]=INF;
                         continue;
                     }
-                    caminos[i][j]=j;
+                    matriss->caminos[i][j]=j;
                 }
             }
             for(int k=0;k<n;k++){
@@ -566,9 +580,9 @@ class Graph {
                         if(i==j){
                             continue;
                         }
-                        if(distancias[i][j] > distancias[k][j] + distancias[i][k]){
-                           distancias[i][j]= distancias[k][j] + distancias[i][k];
-                           caminos[i][j] = k;
+                        if(matriss->distancias[i][j] > matriss->distancias[k][j] + matriss->distancias[i][k]){
+                           matriss->distancias[i][j]= matriss->distancias[k][j] + matriss->distancias[i][k];
+                           matriss->caminos[i][j] = k;
                         }
                     }
                 }
@@ -576,7 +590,7 @@ class Graph {
             //IMPRIMIR----------------------------
             for(int i=0;i<n;i++){
                 for(int j=0;j<n;j++){
-                    cout<<distancias[i][j]<<" ";
+                    cout<<matriss->distancias[i][j]<<" ";
                 }
                 cout<<endl;
             }
@@ -584,11 +598,12 @@ class Graph {
 
             for(int i=0;i<n;i++){
                 for(int j=0;j<n;j++){
-                    cout<<caminos[i][j]<<" ";
+                    cout<<matriss->caminos[i][j]<<" ";
                 }
                 cout<<endl;
             }
             cout<<endl;
+            return matriss;
 
 
 
