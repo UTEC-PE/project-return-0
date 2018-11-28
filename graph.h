@@ -6,8 +6,16 @@
 #include <stack>
 #include <map>
 #include <set>
+#include<limits>
 #include <unordered_map>
 #include <math.h>
+
+#include <limits.h>
+#include <utility>
+#include <queue>
+#include <algorithm>
+#include <iomanip>
+
 #include "node.h"
 #include "edge.h"
 
@@ -608,6 +616,107 @@ class Graph {
 
 
         }
+
+        //------------------------------------------------------------------------GREEDYBFS
+        bool visitado(node* node , NodeSeq visitedNodes){
+            for (int i = 0; i < visitedNodes.size(); ++i)
+            {
+                if (node == visitedNodes[i])
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        self greedyBFS(N start, N end){
+            Graph* grdy = new Graph;
+            NodeSeq lista_vst , ruta;
+            node* inicio  = this->buscar_vertice(start);
+            node* fin = this->buscar_vertice(end);
+            node* temp = inicio;
+            lista_vst.push_back(inicio);
+            ruta.push_back(inicio);
+
+            for (int i = 0; i < nodes.size(); ++i){
+                grdy->insertar_nodo(1,1,nodes[i]->get());
+            }
+
+            while(lista_vst.back() != fin){
+                node* min_opc = nullptr;
+                int peso_less = numeric_limits<int>::max();
+                EdgeSeq* nodeEdges = &(temp->edges);
+                for(auto it : *nodeEdges){
+                    if (it->get() < peso_less && !visitado(((*it).nodes[1]),lista_vst)){
+                        peso_less = it->get();
+                        min_opc = it->nodes[1];
+                    }
+                }
+                if(min_opc){
+                    lista_vst.push_back(min_opc);
+                    ruta.push_back(min_opc);
+                    temp= ruta.back();
+                }else{
+                    ruta.pop_back();
+                    temp= ruta.back();
+                }
+            }
+
+            for (int i = 0; i < ruta.size()-1; ++i){
+                grdy->insertar_arista(ruta[i+1]->get(),ruta[i]->get(),
+                               (this-> buscar_arista(ruta[i]->get(),
+                                ruta[i+1]->get())) ->get());
+            }
+            grdy->print();
+            return *grdy;
+        }
+
+        //--------------------------------------------------------------------DIJKSTRA
+            map<N,E> dijkstra(N vertice){
+            map<N,E> table;
+            set<N> visited;
+            node* root = buscar_vertice(vertice);
+            N lesser;
+            for(auto ni:nodes){
+                if(ni==root){table.insert(pair<N,int>(ni->get(),0));
+                }
+                else{table.insert(pair<N,int>(ni->get(),INT_MAX));
+                }
+
+            }
+
+            int menor = INT_MAX;
+
+            while(visited.size()!=nodes.size()){
+
+                visited.insert(root->get());
+
+                for(auto ei:root->edges){
+                    int values = table[root->get()];
+                    int move = table[ei->nodes[1]->get()];
+                    if(ei->get()+values < move){
+                        cout << ei->nodes[0]->get()<< "-" << ei->nodes[1]->get() << ": "<< ei->get()+values << "\n";
+                        table[ei->nodes[1]->get()] = ei->get()+values;
+                    }
+                }
+                for(auto nodos:table){
+                    if(nodos.second < menor && find(visited.begin(),visited.end(),nodos.first)==visited.end()){
+                        menor = nodos.second;
+                        lesser = nodos.first;
+                    }
+                }
+                menor = INT_MAX;
+                root = buscar_vertice(lesser);
+            }
+
+            return table;
+
+        }
+        //-------------------------------------------------------------BELLMANFORD
+        map<N,E>bellmanford(N vertice){
+            return dijkstra(vertice);
+        }
+
         ~Graph(){
             /*for (ni=nodes.begin();ni!=nodes.end();++ni){
                 eliminar_nodo((*ni)->get());

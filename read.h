@@ -25,6 +25,7 @@ public:
     Read() {
             cout<<"Escriba el nombre del archivo a leer: ";
         cin>>file;
+        file += ".txt";
         ifstream theFile(file);
         if(!theFile.is_open()) {
             cout << "El archivo no existe...\n";

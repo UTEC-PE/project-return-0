@@ -14,6 +14,11 @@ int main(int argc, char *argv[]) {
     gg.getGraph(&g1);
     g1.print();
     cout <<endl;
+    //g1.floyd_warshall();
+    g1.dijkstra('A');
+    g1.greedyBFS('A','F');
+    cout<<"GGGGGGGGGGG"<<endl;
+    g1.A_Star('A','F');
     g1.floyd_warshall();
 
     /*char a,b;
