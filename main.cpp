@@ -14,7 +14,27 @@ int main(int argc, char *argv[]) {
     gg.getGraph(&g1);
     g1.print();
     cout <<endl;
-    g1.conexo();
+    //g1.floyd_warshall();
+    g1.dijkstra('A');
+    g1.greedyBFS('A','F');
+    cout<<"GGGGGGGGGGG"<<endl;
+    g1.A_Star('A','F');
+    g1.floyd_warshall();
+
+    /*char a,b;
+    bool d=0;
+    while(!d){
+        cout<<"Inicio: ";
+        cin >>a;
+        cout<<"final: ";
+        cin >> b;
+        g1.A_Star(a,b);
+        cout<<endl;
+    }
+    */
+
+
+    /*g1.conexo();
     cout <<endl;
     g1.prim();
     cout <<endl;
@@ -27,6 +47,7 @@ int main(int argc, char *argv[]) {
     cout<<"La densidad es: "<<g1.densidad()<<endl;
     cout <<endl;
     g1.info_nodo();
+    */
     system("PAUSE");
     return EXIT_SUCCESS;
 }
